@@ -26,6 +26,11 @@ def recommend_ui():
 @app.route('/recommend_books',methods=['post'])
 def recommend():
     user_input = request.form.get('user_input')
+    
+    # Check if the book exists in our dataset
+    if user_input not in pt.index:
+        return render_template('recommend.html', error="Sorry, we don't have that book in our database! Please check the spelling or try another popular book.")
+
     index = np.where(pt.index == user_input)[0][0]
     similar_items = sorted(list(enumerate(similarity_scores[index])), key=lambda x: x[1], reverse=True)[1:5]
 
